@@ -1,0 +1,54 @@
+version: '2.1'
+
+services:
+ container-php:
+    build:
+        context: ./php
+        dockerfile: Dockerfile
+    ports:
+        - "9001:9000"
+    volumes:
+        - ../src/greatdeals:/src/greatdeals
+        - ./php/config:/usr/local/etc/php
+
+ container-nginx:
+    build:
+        context: ./nginx
+        dockerfile: Dockerfile
+    ports:
+        - "8002:80"
+    volumes:
+        - ../src/greatdeals:/src/greatdeals
+        - ./nginx/config:/etc/nginx
+        - ./nginx/log:/var/log/nginx
+
+# container-mongo:
+#    build:
+#        context: ./mongo
+#        dockerfile: Dockerfile
+#    volumes:
+#        - ./mysql/data:/var/lib/mysql
+#        - ./mysql/log:/var/log/mysql
+#        - ./mysql/config:/etc/mysql
+#    ports:
+#        - "27018:27017"
+#    environment:
+#        MONGO_INITDB_ROOT_USERNAME: root
+#        MONGO_INITDB_ROOT_PASSWORD: root
+
+
+ container-mysql:
+    build:
+        context: ./mysql
+        dockerfile: Dockerfile
+    volumes:
+        - ./mysql/data:/var/lib/mysql
+        - ./mysql/log:/var/log/mysql
+        - ./mysql/config:/etc/mysql
+    ports:
+        - "4407:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: greatdeals
+        MYSQL_USER: dev
+        MYSQL_PASSWORD: dev
